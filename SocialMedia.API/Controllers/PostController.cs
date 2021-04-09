@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using SocialMedia.Core.DTOs;
@@ -18,6 +19,13 @@ namespace SocialMedia.API.Controllers {
     [HttpGet]
     public async Task<IActionResult> GetPosts() {
       var posts = await _postRepository.GetPosts();
+      var postDto = posts.Select(p => new PostDto {
+        PostId = p.PostId,
+        Date = p.Date,
+        Description = p.Description,
+        Image = p.Image,
+        UserId = p.UserId
+      });
       return Ok(posts);
     }
 
@@ -28,7 +36,7 @@ namespace SocialMedia.API.Controllers {
     }
 
     [HttpPost]
-    public async Task<IActionResult> Post(Post post) {
+    public async Task<IActionResult> Post(PostDto post) {
       await _postRepository.InserPost(post);
       return Ok(post);
     }
