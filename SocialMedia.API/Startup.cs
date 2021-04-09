@@ -1,4 +1,5 @@
 using System;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -11,24 +12,29 @@ using SocialMedia.Infraestructure.Data;
 using SocialMedia.Infraestructure.Filters;
 using SocialMedia.Infraestructure.Repositories;
 
-namespace SocialMedia.API {
-  public class Startup {
-    public Startup(IConfiguration configuration) {
+namespace SocialMedia.API
+{
+  public class Startup
+  {
+    public Startup(IConfiguration configuration)
+    {
       Configuration = configuration;
     }
 
     public IConfiguration Configuration { get; }
 
     // This method gets called by the runtime. Use this method to add services to the container.
-    public void ConfigureServices(IServiceCollection services) {
+    public void ConfigureServices(IServiceCollection services)
+    {
 
       services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
       services
         .AddControllers()
         .AddNewtonsoftJson()
-        .ConfigureApiBehaviorOptions(options => {
-          options.SuppressModelStateInvalidFilter = true;
+        .ConfigureApiBehaviorOptions(options =>
+        {
+          // options.SuppressModelStateInvalidFilter = true;
         });
       // Regustrando Filtros para uso por scope
       // Filtro de ejemplo en el scope del controlador
@@ -36,8 +42,9 @@ namespace SocialMedia.API {
       // Filtro para ser usado en el scope de la acvción
       // services.AddScoped<ValidationFilter>();
       // Registrando Filtro de manera global usando MVC
-      services.AddMvc(options => {
-        options.Filters.Add<ValidationFilter>();
+      services.AddMvc().AddFluentValidation(options =>
+      {
+        options.RegisterValidatorsFromAssemblies(AppDomain.CurrentDomain.GetAssemblies());
       });
       // Si se encuentra con un error de referencia circular a la hora de generar la salida json, existen
       // dos formas de evitarlo, ua es instalando el paquete Microsoft.AspNetCore.Mvc.NewtonsoftJson, comentar la linea anterior y 
@@ -45,7 +52,8 @@ namespace SocialMedia.API {
       // services.AddControllers().AddNewtonsoftJson(options => {
       //   options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
       // });
-      services.AddSwaggerGen(c => {
+      services.AddSwaggerGen(c =>
+      {
         c.SwaggerDoc("v1", new OpenApiInfo { Title = "SocialMedia.API", Version = "v1" });
       });
       // Inyectando la cadena de conexión SolcialMedia definida en el archivo appsettins.jcon 
@@ -57,8 +65,10 @@ namespace SocialMedia.API {
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-    public void Configure(IApplicationBuilder app, IWebHostEnvironment env) {
-      if (env.IsDevelopment()) {
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+    {
+      if (env.IsDevelopment())
+      {
         app.UseDeveloperExceptionPage();
         app.UseSwagger();
         app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "SocialMedia.API v1"));
@@ -70,7 +80,8 @@ namespace SocialMedia.API {
 
       app.UseAuthorization();
 
-      app.UseEndpoints(endpoints => {
+      app.UseEndpoints(endpoints =>
+      {
         endpoints.MapControllers();
       });
     }
