@@ -19,24 +19,37 @@ namespace SocialMedia.API.Controllers {
     [HttpGet]
     public async Task<IActionResult> GetPosts() {
       var posts = await _postRepository.GetPosts();
-      var postDto = posts.Select(p => new PostDto {
+      var postsDto = posts.Select(p => new PostDto {
         PostId = p.PostId,
         Date = p.Date,
         Description = p.Description,
         Image = p.Image,
         UserId = p.UserId
       });
-      return Ok(posts);
+      return Ok(postsDto);
     }
 
     [HttpGet("{id}")]
     public async Task<IActionResult> GetPostById(int Id) {
       var post = await _postRepository.GetPostById(Id);
-      return Ok(post);
+      var postDto = new PostDto {
+        PostId = post.PostId,
+        Date = post.Date,
+        Description = post.Description,
+        Image = post.Image,
+        UserId = post.UserId
+      };
+      return Ok(postDto);
     }
 
     [HttpPost]
-    public async Task<IActionResult> Post(PostDto post) {
+    public async Task<IActionResult> Post(PostDto postDto) {
+      var post = new Post {
+        Date = postDto.Date,
+        Description = postDto.Description,
+        Image = postDto.Image,
+        UserId = postDto.UserId
+      };
       await _postRepository.InserPost(post);
       return Ok(post);
     }
