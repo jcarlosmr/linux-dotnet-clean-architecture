@@ -20,7 +20,13 @@ namespace SocialMedia.API {
     // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services) {
 
-      services.AddControllers();
+      services.AddControllers().AddNewtonsoftJson();
+      // Si se encuentra con un error de referencia circular a la hora de generar la salida json, existen
+      // dos formas de evitarlo, ua es instalando el paquete Microsoft.AspNetCore.Mvc.NewtonsoftJson, comentar la linea anterior y 
+      // agregando el siguiente código;
+      // services.AddControllers().AddNewtonsoftJson(options => {
+      //   options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+      // });
       services.AddSwaggerGen(c => {
         c.SwaggerDoc("v1", new OpenApiInfo { Title = "SocialMedia.API", Version = "v1" });
       });
