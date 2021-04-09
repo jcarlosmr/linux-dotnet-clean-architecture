@@ -5,10 +5,14 @@ using Microsoft.AspNetCore.Mvc;
 using SocialMedia.Core.DTOs;
 using SocialMedia.Core.Entities;
 using SocialMedia.Core.Interfaces;
+using SocialMedia.Infraestructure.Filters;
 
 namespace SocialMedia.API.Controllers {
+  // Implementacion del filtro en el scope del controlador
+  // [ServiceFilter(typeof(ControllerFilterExample))]
   [Route("api/[controller]")]
   [ApiController]
+
   public class PostController : ControllerBase {
 
     private readonly IPostRepository _postRepository;
@@ -27,6 +31,8 @@ namespace SocialMedia.API.Controllers {
     }
 
     [HttpGet("{id}")]
+    // Implementacion del filtro en el scope de la acción
+    // [ServiceFilter(typeof(ValidationFilter))]
     public async Task<IActionResult> GetPostById(int Id) {
       var post = await _postRepository.GetPostById(Id);
       var postDto = _mapper.Map<PostDto>(post); ;

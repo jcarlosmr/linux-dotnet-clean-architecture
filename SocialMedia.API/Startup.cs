@@ -8,6 +8,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using SocialMedia.Core.Interfaces;
 using SocialMedia.Infraestructure.Data;
+using SocialMedia.Infraestructure.Filters;
 using SocialMedia.Infraestructure.Repositories;
 
 namespace SocialMedia.API {
@@ -23,7 +24,21 @@ namespace SocialMedia.API {
 
       services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
-      services.AddControllers().AddNewtonsoftJson();
+      services
+        .AddControllers()
+        .AddNewtonsoftJson()
+        .ConfigureApiBehaviorOptions(options => {
+          options.SuppressModelStateInvalidFilter = true;
+        });
+      // Regustrando Filtros para uso por scope
+      // Filtro de ejemplo en el scope del controlador
+      // services.AddScoped<ControllerFilterExample>();
+      // Filtro para ser usado en el scope de la acvción
+      // services.AddScoped<ValidationFilter>();
+      // Registrando Filtro de manera global usando MVC
+      services.AddMvc(options => {
+        options.Filters.Add<ValidationFilter>();
+      });
       // Si se encuentra con un error de referencia circular a la hora de generar la salida json, existen
       // dos formas de evitarlo, ua es instalando el paquete Microsoft.AspNetCore.Mvc.NewtonsoftJson, comentar la linea anterior y 
       // agregando el siguiente código;
