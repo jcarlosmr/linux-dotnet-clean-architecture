@@ -12,7 +12,7 @@ namespace SocialMedia.Infraestructure.Data.Configurations {
 
       builder.Property(e => e.UserId)
         .HasColumnName("IdUsuario")
-        .ValueGeneratedNever();
+        .ValueGeneratedOnAdd();
 
       builder.Property(e => e.FirstName)
         .HasColumnName("Nombres")

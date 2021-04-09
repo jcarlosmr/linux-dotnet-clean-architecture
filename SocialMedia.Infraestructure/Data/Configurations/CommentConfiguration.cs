@@ -11,7 +11,7 @@ namespace SocialMedia.Infraestructure.Data.Configurations {
 
       builder.Property(e => e.ComentId)
         .HasColumnName("IdComentario")
-        .ValueGeneratedNever();
+        .ValueGeneratedOnAdd();
 
       builder.Property(e => e.PostId)
         .HasColumnName("IdPublicacion");
